@@ -21,21 +21,28 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+
 @RestController
 @RequestMapping("/api/pedido")
+@Api(value = "PedidoRest", description = "Permite gestionar los pedidos")
 public class PedidoRest {
 
     private  List<Pedido> pedidos = new ArrayList();
     private static Integer ID = 1;
 
     @PostMapping()
+    @ApiOperation(value = "Crea un pedido")
     private ResponseEntity<Pedido> crearPedido(@RequestBody Pedido p){
         p.setId(ID++);
         pedidos.add(p);
         return ResponseEntity.ok(p);
     }
 
+
     @PostMapping(path = "/{idPedido}/detalle")
+    @ApiOperation(value = "Agrega un detalle a un pedido")
     private ResponseEntity<Pedido> agregarDetalle(@PathVariable Integer idPedido, @RequestBody DetallePedido detallePedido){
         for(Pedido p : pedidos){
             if (p.getId().equals(idPedido)){
@@ -49,6 +56,7 @@ public class PedidoRest {
     }
 
     @PutMapping(path = "/{id}")
+    @ApiOperation(value = "Modifica un pedido")
     private ResponseEntity<Pedido> modificar(@PathVariable Integer id, @RequestBody Pedido p){
         OptionalInt indexOpt =   IntStream.range(0, pedidos.size())
         .filter(i -> pedidos.get(i).getId().equals(id))
@@ -63,6 +71,7 @@ public class PedidoRest {
     }
 
     @DeleteMapping(path = "/{idPedido}")
+    @ApiOperation(value = "Borra un pedido")
     private ResponseEntity<Pedido> borrarPorId(@PathVariable Integer idPedido){
         OptionalInt indexOpt =   IntStream.range(0, pedidos.size())
         .filter(i -> pedidos.get(i).getId().equals(idPedido))
@@ -78,6 +87,7 @@ public class PedidoRest {
     }
 
     @DeleteMapping(path = "/{idPedido}/detalle/{idDetalle}")
+    @ApiOperation(value = "Borra un detalle a un pedido")
     private ResponseEntity<Pedido> borrarDetalle(@PathVariable Integer idPedido, @PathVariable Integer idDetalle){
         OptionalInt indexOpt =   IntStream.range(0, pedidos.size())
         .filter(i -> pedidos.get(i).getId().equals(idPedido))
@@ -101,6 +111,7 @@ public class PedidoRest {
     }
 
     @GetMapping(path = "/{idPedido}")
+    @ApiOperation(value = "Busca un pedido por ID")
     private ResponseEntity<Pedido> buscarPedidoPorId(@PathVariable Integer idPedido){
         for(Pedido p : pedidos){
             if(p.getId().equals(idPedido)){
@@ -111,6 +122,7 @@ public class PedidoRest {
     }
 
     @GetMapping(path = "/obra/{idObra}")
+    @ApiOperation(value = "Busca un pedido por ID de OBRA")
     private ResponseEntity<Pedido> buscarPedidoPorIdObra(@PathVariable Integer idObra){
         for(Pedido p : pedidos){
             if(p.getObra().getId().equals(idObra)){
@@ -121,6 +133,7 @@ public class PedidoRest {
     }
 
     @GetMapping(path = "/{idPedido}/detalle/{idDetalle}")
+    @ApiOperation(value = "Busca un detalle de pedido por ID")
     private ResponseEntity<DetallePedido> buscarDetallePedidoPorId(@PathVariable Integer idPedido, @PathVariable Integer idDetalle){
         for(Pedido p : pedidos){
             if(p.getId().equals(idPedido)){
